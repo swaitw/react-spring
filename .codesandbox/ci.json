@@ -1,5 +1,8 @@
 {
   "packages": ["packages/*", "targets/*"],
-  "sandboxes": ["/demo/src/sandboxes/card", "/demo/src/sandboxes/gooBlobs"],
+  "sandboxes": [
+    "/demo/sandbox/src/sandboxes/card",
+    "/demo/sandbox/src/sandboxes/gooBlobs"
+  ],
   "node": "14"
 }
