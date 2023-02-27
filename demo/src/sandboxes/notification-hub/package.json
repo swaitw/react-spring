@@ -1,15 +1,21 @@
 {
-  "name": "spring-notification-hub",
+  "name": "Notification Hub",
+  "description": "Creating toast notifications with useTransition",
+  "keywords": [
+    "notifications",
+    "toast",
+    "useTransition"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "lorem-ipsum": "2.0.3",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-feather": "2.0.9",
-    "react-scripts": "4.0.3",
-    "styled-components": "^5.2.3"
+    "lorem-ipsum": "2.0.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-feather": "2.0.10",
+    "react-scripts": "5.0.1",
+    "styled-components": "^5.3.6"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -23,10 +29,10 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "bic": false,
   "devDependencies": {
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "typescript": "^4.2.3"
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@types/styled-components": "^5.1.26",
+    "typescript": "^4.9.5"
   }
 }

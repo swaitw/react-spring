@@ -1,4 +1,4 @@
-import { Remap } from '@react-spring/types'
+import { Lookup, Remap } from '@react-spring/types'
 import { is } from '@react-spring/shared'
 
 import { ControllerUpdate, PickAnimated, SpringValues } from '../types'
@@ -11,16 +11,18 @@ import { useSprings } from './useSprings'
  */
 export type UseSpringProps<Props extends object = any> = unknown &
   PickAnimated<Props> extends infer State
-  ? Remap<
-      ControllerUpdate<State> & {
-        /**
-         * Used to access the imperative API.
-         *
-         * When defined, the render animation won't auto-start.
-         */
-        ref?: SpringRef<State>
-      }
-    >
+  ? State extends Lookup
+    ? Remap<
+        ControllerUpdate<State> & {
+          /**
+           * Used to access the imperative API.
+           *
+           * When defined, the render animation won't auto-start.
+           */
+          ref?: SpringRef<State>
+        }
+      >
+    : never
   : never
 
 /**
@@ -33,7 +35,9 @@ export function useSpring<Props extends object>(
     | (() => (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps),
   deps?: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State>, SpringRef<State>]
+  ? State extends Lookup
+    ? [SpringValues<State>, SpringRef<State>]
+    : never
   : never
 
 /**
@@ -50,7 +54,9 @@ export function useSpring<Props extends object>(
   props: (Props & Valid<Props, UseSpringProps<Props>>) | UseSpringProps,
   deps: readonly any[] | undefined
 ): PickAnimated<Props> extends infer State
-  ? [SpringValues<State>, SpringRef<State>]
+  ? State extends Lookup
+    ? [SpringValues<State>, SpringRef<State>]
+    : never
   : never
 
 /** @internal */

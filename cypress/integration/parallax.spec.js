@@ -1,5 +1,8 @@
+const ANIMATION_WAIT = 4000
+
 describe('Parallax - vertical', () => {
   const HEIGHT = Cypress.config('viewportHeight')
+  const WIDTH = Cypress.config('viewportWidth')
 
   beforeEach(() => {
     cy.visit('/vertical')
@@ -7,7 +10,11 @@ describe('Parallax - vertical', () => {
 
   it('should translate layers as expected', () => {
     // intial snapshot
-    cy.findByTestId('container').toMatchSnapshot()
+    console.log(HEIGHT, WIDTH)
+
+    cy.findByTestId('container').matchImageSnapshot('vertical #1', {
+      clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+    })
 
     // initial layer positions
     cy.findByTestId('default-layer')
@@ -32,10 +39,12 @@ describe('Parallax - vertical', () => {
     // scroll to next page
     cy.findByTestId('container').scrollTo(0, HEIGHT)
     // wait for animation to finish
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // halfway snapshot
-    cy.findByTestId('container').toMatchSnapshot()
+    cy.findByTestId('container').matchImageSnapshot('vertical #2', {
+      clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+    })
 
     // halfway layer positions
     cy.findByTestId('default-layer')
@@ -60,10 +69,12 @@ describe('Parallax - vertical', () => {
     // scroll to last page
     cy.findByTestId('container').scrollTo('bottom')
     // wait for animation again
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // final snapshot
-    cy.findByTestId('container').toMatchSnapshot()
+    cy.findByTestId('container').matchImageSnapshot('vertical #3', {
+      clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+    })
 
     // final layer positions
     cy.findAllByTestId(/-layer/).each(layer =>
@@ -81,6 +92,7 @@ describe('Parallax - vertical', () => {
 })
 
 describe('Parallax - horizontal', () => {
+  const HEIGHT = Cypress.config('viewportHeight')
   const WIDTH = Cypress.config('viewportWidth')
 
   beforeEach(() => {
@@ -89,7 +101,9 @@ describe('Parallax - horizontal', () => {
 
   it('should translate layers as expected', () => {
     // intial snapshot
-    cy.findByTestId('container').toMatchSnapshot()
+    cy.findByTestId('container').matchImageSnapshot('horizontal #1', {
+      clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+    })
 
     // initial layer positions
     cy.findByTestId('default-layer')
@@ -114,10 +128,12 @@ describe('Parallax - horizontal', () => {
     // scroll to next page
     cy.findByTestId('container').scrollTo(WIDTH, 0)
     // wait for animation to finish
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // halfway snapshot
-    cy.findByTestId('container').toMatchSnapshot()
+    cy.findByTestId('container').matchImageSnapshot('horizontal #2', {
+      clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+    })
 
     // halfway layer positions
     cy.findByTestId('default-layer')
@@ -143,10 +159,12 @@ describe('Parallax - horizontal', () => {
     // but will pass with `yarn test` (`cypress run`)
     cy.findByTestId('container').scrollTo('right')
     // wait for animation again
-    cy.wait(2000)
+    cy.wait(ANIMATION_WAIT)
 
     // final snapshot
-    cy.findByTestId('container').toMatchSnapshot()
+    cy.findByTestId('container').matchImageSnapshot('horizontal #3', {
+      clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT },
+    })
 
     // final layer positions
     cy.findAllByTestId(/-layer/).each(layer =>

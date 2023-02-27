@@ -7,7 +7,11 @@
     "**/*.test.ts",
     "targets/zdog/@types/**/*"
   ],
-  "exclude": ["packages/*/src/types/**/*", "targets/*/src/types/**/*"],
+  "exclude": [
+    "packages/*/src/types/**/*",
+    "targets/*/src/types/**/*",
+    "docs/**/*"
+  ],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
@@ -22,6 +26,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "strictNullChecks": true
   }
 }

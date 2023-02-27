@@ -52,6 +52,8 @@ export interface IParallax {
   current: number
   controller: Controller<{ scroll: number }>
   layers: Set<IParallaxLayer>
+  container: React.MutableRefObject<any>
+  content: React.MutableRefObject<any>
   scrollTo(offset: number): void
   update(): void
   stop(): void
@@ -211,6 +213,7 @@ export interface ParallaxProps extends ViewProps {
   enabled?: boolean
   horizontal?: boolean
   innerStyle?: CSSProperties
+  children: React.ReactNode
 }
 
 export const Parallax = React.memo(
@@ -226,6 +229,9 @@ export const Parallax = React.memo(
       ...rest
     } = props
 
+    const containerRef = useRef<any>()
+    const contentRef = useRef<any>()
+
     const state: IParallax = useMemoOne(
       () => ({
         config,
@@ -236,6 +242,8 @@ export const Parallax = React.memo(
         offset: 0,
         controller: new Controller({ scroll: 0 }),
         layers: new Set<IParallaxLayer>(),
+        container: containerRef,
+        content: contentRef,
         update: () => update(),
         scrollTo: offset => scrollTo(offset),
         stop: () => state.controller.stop(),
@@ -248,9 +256,6 @@ export const Parallax = React.memo(
     }, [config])
 
     React.useImperativeHandle(ref, () => state)
-
-    const containerRef = useRef<any>()
-    const contentRef = useRef<any>()
 
     const update = () => {
       const container = containerRef.current

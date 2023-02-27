@@ -13,6 +13,7 @@ dist/
 .DS_Store
 Thumbs.db
 ehthumbs.db
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -27,4 +28,32 @@ Desktop.ini
 report.*.json
 .idea
 
+#
+# Changesets
+#
 **/CHANGELOG.md
+
+#
+# Yarn
+#
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+#
+# dot files
+#
+.cache
+.vercel
+.output
+.turbo
+
+#
+# Remix 
+#
+docs/public/build
+docs/api/*

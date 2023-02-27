@@ -106,7 +106,7 @@ export type GoalProp<T> = [T] extends [IsPlainObject<T>]
   : GoalValue<T>
 
 /** A set of values for a `Controller` to animate from/to. */
-export type GoalValues<T extends Lookup> = FluidProps<T> extends infer Props
+export type GoalValues<T> = FluidProps<T> extends infer Props
   ? { [P in keyof Props]?: Props[P] | null }
   : never
 
@@ -364,7 +364,7 @@ export type PickAnimated<Props extends object, Fwd = true> = unknown &
 /**
  * Pick the values of the `to` prop. Forward props are *not* included.
  */
-type ToValues<Props extends object, AndForward = true> = unknown &
+export type ToValues<Props extends object, AndForward = true> = unknown &
   (AndForward extends true ? ForwardProps<Props> : unknown) &
   (Props extends { to?: any }
     ? Exclude<Props['to'], Function | ReadonlyArray<any>> extends infer To

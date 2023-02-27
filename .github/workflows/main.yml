@@ -9,21 +9,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.6.0
+        uses: styfle/cancel-workflow-action@0.11.0
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: '15.11.0'
-      - name: Install deps
-        # this runs a build script so there is no dedicated build
-        run: |
-          npm i -g yarn 
-          yarn install
-      - name: Run tests
-        run: yarn test
-      - name: Trial Build
+          node-version: 18
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install
+        run: yarn install
+
+      - name: Build
         run: yarn build
+
+      - name: Typecheck
+        run: yarn test:ts
+
+      - name: Tests (Jest)
+        run: yarn test:unit
+
+      - name: Test (Cypress)
+        run: yarn test:e2e

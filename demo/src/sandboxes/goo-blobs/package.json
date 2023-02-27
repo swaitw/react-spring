@@ -1,13 +1,21 @@
 {
-  "name": "spring-goo-blobs",
+  "name": "Goo Blobs",
+  "description": "2D SVG metaballs animated with react-spring",
+  "keywords": [
+    "useTrail",
+    "useMeasure",
+    "svg",
+    "metaballs",
+    "filters"
+  ],
   "version": "1.0.0",
   "main": "src/index.tsx",
   "dependencies": {
     "@react-spring/web": "*",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-scripts": "4.0.3",
-    "react-use-measure": "2.0.4"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "react-use-measure": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -21,10 +29,9 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "bic": false,
   "devDependencies": {
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "typescript": "^4.2.3"
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "typescript": "^4.9.5"
   }
 }

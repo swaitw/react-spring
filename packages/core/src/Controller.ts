@@ -27,6 +27,8 @@ import {
   OnChange,
   OnRest,
   OnStart,
+  SpringChain,
+  SpringToFn,
   SpringValues,
 } from './types'
 
@@ -123,9 +125,9 @@ export class Controller<State extends Lookup = Lookup> {
   get idle() {
     return (
       !this._state.asyncTo &&
-      Object.values(this.springs as Lookup<SpringValue>).every(
-        spring => spring.idle
-      )
+      Object.values(this.springs as Lookup<SpringValue>).every(spring => {
+        return spring.idle && !spring.isDelayed && !spring.isPaused
+      })
     )
   }
 
@@ -297,9 +299,9 @@ export function flushUpdateQueue(
   ctrl: Controller<any>,
   queue: ControllerQueue
 ) {
-  return Promise.all(
-    queue.map(props => flushUpdate(ctrl, props))
-  ).then(results => getCombinedResult(ctrl, results))
+  return Promise.all(queue.map(props => flushUpdate(ctrl, props))).then(
+    results => getCombinedResult(ctrl, results)
+  )
 }
 
 /**
@@ -401,7 +403,14 @@ export async function flushUpdate(
               resolve(getCancelledResult(ctrl))
             } else {
               props.onRest = onRest
-              resolve(runAsync(asyncTo!, props, state, ctrl))
+              resolve(
+                runAsync(
+                  asyncTo as SpringChain | SpringToFn,
+                  props,
+                  state,
+                  ctrl
+                )
+              )
             }
           },
         },

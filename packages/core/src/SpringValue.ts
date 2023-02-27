@@ -90,6 +90,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
   /** The state for `runAsync` calls */
   protected _state: RunAsyncState<SpringValue<T>> = {
     paused: false,
+    delayed: false,
     pauseQueue: new Set(),
     resumeQueue: new Set(),
     timeouts: new Set(),
@@ -130,9 +131,11 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   get velocity(): VelocityProp<T> {
     const node = getAnimated(this)!
-    return (node instanceof AnimatedValue
-      ? node.lastVelocity || 0
-      : node.getPayload().map(node => node.lastVelocity || 0)) as any
+    return (
+      node instanceof AnimatedValue
+        ? node.lastVelocity || 0
+        : node.getPayload().map(node => node.lastVelocity || 0)
+    ) as any
   }
 
   /**
@@ -155,6 +158,14 @@ export class SpringValue<T = any> extends FrameValue<T> {
    */
   get isPaused() {
     return isPaused(this)
+  }
+
+  /**
+   *
+   *
+   */
+  get isDelayed() {
+    return this._state.delayed
   }
 
   /** Advance the current animation by a number of milliseconds */
@@ -205,6 +216,15 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
         let velocity: number
 
+        /** The smallest distance from a value before being treated like said value. */
+        /**
+         * TODO: make this value ~0.0001 by default in next breaking change
+         * for more info see – https://github.com/pmndrs/react-spring/issues/1389
+         */
+        const precision =
+          config.precision ||
+          (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
+
         // Duration easing
         if (!is.und(config.duration)) {
           let p = 1
@@ -248,7 +268,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
           const e = Math.exp(-(1 - decay) * elapsed)
 
           position = from + (v0 / (1 - decay)) * (1 - e)
-          finished = Math.abs(node.lastPosition - position) < 0.1
+          finished = Math.abs(node.lastPosition - position) <= precision
 
           // derivative of position
           velocity = v0 * e
@@ -257,11 +277,6 @@ export class SpringValue<T = any> extends FrameValue<T> {
         // Spring easing
         else {
           velocity = node.lastVelocity == null ? v0 : node.lastVelocity
-
-          /** The smallest distance from a value before being treated like said value. */
-          const precision =
-            config.precision ||
-            (from == to ? 0.005 : Math.min(1, Math.abs(to - from) * 0.001))
 
           /** The velocity at which movement is essentially none */
           const restVelocity = config.restVelocity || precision / 10
@@ -435,7 +450,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
 
   start(to: T, props?: SpringProps<T>): AsyncResult<this>
 
-  start(to?: T | SpringUpdate<T>, arg2?: SpringProps<T>) {
+  start(to?: any, arg2?: any) {
     let queue: SpringUpdate<T>[]
     if (!is.und(to)) {
       queue = [is.obj(to) ? to : { ...arg2, to }]
@@ -444,9 +459,12 @@ export class SpringValue<T = any> extends FrameValue<T> {
       this.queue = []
     }
 
-    return Promise.all(queue.map(props => this._update(props))).then(results =>
-      getCombinedResult(this, results)
-    )
+    return Promise.all(
+      queue.map(props => {
+        const up = this._update(props)
+        return up
+      })
+    ).then(results => getCombinedResult(this, results))
   }
 
   /**
@@ -557,6 +575,7 @@ export class SpringValue<T = any> extends FrameValue<T> {
     }
 
     const state = this._state
+
     return scheduleProps(++this._lastCallId, {
       key,
       props,

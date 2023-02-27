@@ -1,8 +1,18 @@
 {
   "name": "@react-spring/konva",
-  "version": "9.3.1",
-  "main": "dist/react-spring-konva.cjs.js",
-  "module": "dist/react-spring-konva.esm.js",
+  "version": "9.7.1",
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "module": "./dist/esm/index.js",
+      "require": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist/*",
     "README.md",
@@ -27,18 +37,18 @@
     "Josh Ellis (https://github.com/joshuaellis)"
   ],
   "dependencies": {
-    "@react-spring/animated": "~9.3.0",
-    "@react-spring/core": "~9.3.0",
-    "@react-spring/shared": "~9.3.0",
-    "@react-spring/types": "~9.3.0"
+    "@react-spring/animated": "~9.7.1",
+    "@react-spring/core": "~9.7.1",
+    "@react-spring/shared": "~9.7.1",
+    "@react-spring/types": "~9.7.1"
   },
   "peerDependencies": {
     "konva": ">=2.6",
-    "react": "^16.8.0  || ^17.0.0",
-    "react-konva": "^16.8.0  || ^17.0.0"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react-konva": "^16.8.0 || ^16.8.7-0 || ^16.9.0-0 || ^16.10.1-0 || ^16.12.0-0 || ^16.13.0-0 || ^17.0.0-0 || ^17.0.1-0 || ^17.0.2-0 || ^18.0.0-0"
   },
-  "devDependencies": {
-    "konva": "~2.6.0",
-    "react-konva": "~16.8.0"
+  "scripts": {
+    "build": "tsup --legacy-output",
+    "dev": "tsup"
   }
 }
